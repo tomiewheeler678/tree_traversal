@@ -1,35 +1,3 @@
-class Tree
-  attr_accessor :payload, :children
-
-  def initialize(payload, children)
-    @payload = payload
-    @children = children
-  end
-
-  def depth_first(find_value, node = nil)
-    node ||= self
-    if node.payload == find_value
-      return node.payload
-    else
-      node.children.each do |child|
-        payload = depth_first(find_value, child)
-        return payload if payload == find_value
-    end
-  end
-    
-  def breadth_first(find_value, node = nil)
-    wait = []
-    wait.push(node)
-
-    while wait.length != 0
-      n = wait.shift
-      return n if n.payload == find_value
-      n.children.each do |child|
-        wait.push(child)
-    end
-  end
-end
-
 class MyQueue
   def initialize
     @queue = []
@@ -44,23 +12,45 @@ class MyQueue
   end
 end
 
+class Tree
+  attr_accessor :payload, :children
 
-queue = MyQueue.new
+  def initialize(payload, children)
+    @payload = payload
+    @children = children
+    @queue = MyQueue.new
+  end
 
-queue.enqueue(1)
-queue.enqueue(2)
-puts queue.dequeue
-queue.enqueue(3)
-queue.enqueue(4)
-queue.enqueue(5)
-puts queue.dequeue
-queue.enqueue(6)
-puts queue.dequeue
-puts queue.dequeue
-puts queue.dequeue
-puts queue.dequeue
 
-# Outputs: 1, 2, 3, 4, 5, 6
+  def depth_first(node, find_value)
+    #node = self
+    if node.payload == find_value
+     puts "exit condition met"
+      return node
+    else
+      node.children.each do |child|
+      puts node.payload
+      depth_first(child, find_value)
+    end
+    end
+  end
+    
+  def breadth_first(node, find_value)
+    #node = self
+    while node
+      if node.payload == find_value
+        puts "exit condition met"
+        return node
+      else
+        node.children.each do |child|
+        puts node.payload
+          @queue.enqueue(child)
+        end
+      end
+      node = @queue.dequeue
+    end
+  end
+end
 
 # The "Leafs" of a tree, elements that have no children
 deep_fifth_node = Tree.new(5, [])
@@ -77,6 +67,6 @@ shallow_fifth_node = Tree.new(5, [ninth_node])
 trunk = Tree.new(2, [seventh_node, shallow_fifth_node])
 
 puts "Depth First:"
-depth_first(trunk, 11)
+trunk.depth_first(trunk, 11)
 puts "Breadth First:"
-breadth_first(trunk, 11)
+trunk.breadth_first(trunk, 11)
